@@ -25,5 +25,5 @@ The solver is implemented in Python using the Pyomo modelling language. The requ
 - The iteration-wise solution (text file) will also be saved in the working directory.
 
 Have feedback or questions? Please email: gulhameed361@gmail.com.
-Thanks for using TRF-Solver — enjoy optimising!
+Thanks for using the TRF Solver — enjoy optimising!
 
