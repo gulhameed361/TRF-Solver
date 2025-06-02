@@ -1,4 +1,4 @@
-# TRF-Solver
+# TRF Solver
 The Trust-Region Filter (TRF) solver was developed using concepts from nonlinear optimisation, derivative-free optimisation, and surrogate modelling. It allows users to solve grey box optimisation problems in which glass box parts of the problem are modelled with open, equation-based models (with available derivative information) and black box parts of the problem lack derivative information (i.e., only function evaluations are possible). This trust-region-based method utilises surrogate models constructed using external black box evaluations, thus avoiding the direct implementation of the computationally expensive black box models. This is done iteratively using the TRF solver, resulting in fewer calls to the computationally costly external black box functions.
 
 The user is required to provide black-box external functions and the glass-box model. The default values of tuning parameters for the TRF algorithm are implemented, however, the user is sometimes required to change them (via the solver's options) based on sensitivity analysis. 
