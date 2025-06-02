@@ -21,7 +21,7 @@ The solver is implemented in Python using the Pyomo modelling language. The requ
 # Running
 - A sample grey box optimisation setup is included in RunFile.py file between lines 269 and 311.
 - Additional problems (used in the manuscript) are provided in ProblemSet.py file and can be copied into RunFile.py file.
-- While optimising, the solver will display progress and results on Spyder's console.
+- While optimising, the solver will display progress and results on Spyder's console via logger.
 - The iteration-wise solution (text file) will also be saved in the working directory.
 
 Have feedback or questions? Please email: gulhameed361@gmail.com.
