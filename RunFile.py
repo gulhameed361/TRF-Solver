@@ -295,7 +295,7 @@ solver = TrustRegionSolver(solver ='ipopt', algorithm_type=0, reduced_model_type
 eflist = [bb]
     
 # Open the file and redirect stdout safely
-filename = f"Model_1_Eason_Example_A{solver.config['algorithm type']}_S{solver.config['reduced model type']}.txt"
+filename = f"Model_2_Eason_Example_A{solver.config['algorithm type']}_S{solver.config['reduced model type']}.txt"
 
 try:
     with open(filename, 'w') as f:
