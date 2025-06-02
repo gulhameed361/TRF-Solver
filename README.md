@@ -14,9 +14,9 @@ The solver is implemented in Python using the Pyomo modelling language. The requ
 - Select Python 3.8.20 when setting up the environment.
 - Activate the environment.
 - Open Spyder IDE, then open the RunFile.py file.
-- Scroll to the indicated section (at the end: lines xxx-yyy) and add your grey box optimisation code.
+- Scroll to the indicated section (at the end: line 269 and onwards) and add your grey box optimisation code.
 
-A sample grey box optimisation setup is included in Run.py between lines xxx and xyz. Additional problems (used in the manuscript) are provided in problem_set.py and can be copied into Run.py.
+A sample grey box optimisation setup is included in Run.py between lines 269 and 311. Additional problems (used in the manuscript) are provided in ProblemSet.py and can be copied into RunFile.py.
 
 Have feedback or questions? Please email: gulhameed361@gmail.com.
 Thanks for using TRF-Solver — enjoy optimising!
