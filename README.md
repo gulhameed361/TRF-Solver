@@ -3,7 +3,7 @@ The Trust-Region Filter (TRF) solver was developed using concepts from nonlinear
 
 Please refer to the manuscript (--------) for more details.
 
-The user is required to provide black-box external functions and the glass-box model. The default values of tuning parameters for the TRF algorithm are implemented, however, the user is sometimes required to change them (via the solver's options) based on sensitivity analysis. 
+The user is required to provide black-box external functions and the glass-box model. The default values of tuning parameters for the TRF algorithm are implemented, however, the user is sometimes required to change them (via the solver's options) based on the sensitivity analysis. 
 
 The solver is implemented in Python using the Pyomo modelling language. The required Python packages are specified in both requirements.txt (for pip users) and environment.yml (for conda users). A nonlinear programming (NLP) solver (such as IPOPT) is required to run the TRF solver.
 
