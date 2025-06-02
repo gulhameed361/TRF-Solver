@@ -267,7 +267,7 @@ class Tee:
     
 
 # #################################### Grey Box Optimisation Model ###############################################
-# Model 1 (Eason's Example), it is solved using the default values of the tuning parameter, see notes for the default values
+# Model 2 (Eason's Example), it is solved using the default values of the tuning parameter, see notes for the default values
 
 # Define the optimisation model
 model = ConcreteModel()
