@@ -5,7 +5,7 @@ The user is required to provide black-box external functions and the glass-box m
 
 The solver is implemented in Python using the Pyomo modelling language. The required Python packages are specified in both requirements.txt (for pip users) and environment.yml (for conda users).
 
-Installation
+# Installation
 - Download all files in this repository.
 - Download/install and open Anaconda Navigator.
 - Create a new environment using either:
