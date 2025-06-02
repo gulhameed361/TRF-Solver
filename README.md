@@ -18,6 +18,6 @@ Installation
 
 A sample grey box optimisation setup is included in Run.py. Additional problems (used in the manuscript) are provided in problem_set.py and can be copied into Run.py.
 
-Have feedback or questions? Please email: [gulhameed361@gmail.com]
+Have feedback or questions? Please email: gulhameed361@gmail.com.
 Thanks for using TRF-Solver — enjoy optimising!
 
