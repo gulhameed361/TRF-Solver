@@ -3,7 +3,7 @@ The Trust-Region Filter (TRF) solver was developed using concepts from nonlinear
 
 Please refer to the manuscript (https://doi.org/10.48550/arXiv.2509.01651) for more details.
 
-The user is required to provide black-box external functions and the glass-box model. The default values of tuning parameters for the TRF algorithm are implemented, however, the user is sometimes required to change them (via the solver's options) based on the sensitivity analysis. 
+The user is required to provide black-box external functions and the glass-box model. The default values of tuning parameters for the TRF algorithm are implemented; however, the user is sometimes required to change them (via the solver's options) based on the sensitivity analysis. 
 
 The solver is implemented in Python using the Pyomo modelling language. The required Python packages are specified in both requirements.txt (for pip users) and environment.yml (for conda users). A nonlinear programming (NLP) solver (such as IPOPT) is required to run the TRF solver.
 
@@ -19,8 +19,9 @@ The solver is implemented in Python using the Pyomo modelling language. The requ
 - Scroll to the indicated section (at the end: line 269 and onwards) and add your grey box optimisation code.
 
 # Running
-- A sample grey box optimisation setup is included in RunFile.py file between lines 269 and 311.
-- Additional problems (used in the manuscript) are provided in ProblemSet.py file and can be copied into RunFile.py file.
+- A sample grey box optimisation setup is included in the RunFile.py file between lines 269 and 311.
+- Additional problems (used in the manuscript) are provided in the ProblemSet.py file and can be copied into the RunFile.py file.
+- Different solver options (such as surrogate form, algorithmic variant, initial trust radius, maximum iterations, tolerances, etc.) can be set; a few are set as examples in the sample grey-box optimisation setup.
 - While optimising, the solver will display progress and results on Spyder's console via logger.
 - The iteration-wise solution (text file) will also be saved in the working directory.
 
