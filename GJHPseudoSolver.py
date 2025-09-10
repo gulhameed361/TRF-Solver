@@ -5,65 +5,73 @@ Created on Wed Nov 13 14:56:50 2024
 @author: gh00616
 """
 
+# local_gjh_fallback.py
 import logging
-
-from pyomo.common.tempfiles import TempfileManager
-
-from pyomo.common.download import DownloadFactory
-from pyomo.opt.base import SolverFactory, OptSolver
+import os
+import shutil
+from pyomo.opt.base import SolverFactory
 from pyomo.solvers.plugins.solvers.ASL import ASL
-
-from pyomo.common.config import ( 
-    ConfigBlock, ConfigValue, 
-    PositiveInt, PositiveFloat, 
-    NonNegativeFloat, In)
-from pyomo.core import Var, value
-
+from pyomo.common.tempfiles import TempfileManager
 from readgjh import readgjh
-import getGJH
+from distutils.spawn import find_executable
 
-logger = logging.getLogger('TRF Algorithm')
-#fh = logging.FileHandler('debug_vars.log')
-#logger.setLevel(logging.DEBUG)
-#logger.addHandler(fh)
+logger = logging.getLogger('local.gjh')
 
-def load():
-    pass
-
-DownloadFactory.register('gjh')(getGJH.get_gjh)
+# Name of gjh executable
+GJH_FILENAME = "gjh.exe" if os.name == "nt" else "gjh"
+GJH_CWD_PATH = os.path.join(os.getcwd(), GJH_FILENAME)  # current working directory fallback
 
 
-@SolverFactory.register('contrib.gjh', doc='Interface to the AMPL GJH "solver"')
-class GJHSolver(ASL):
-    """An interface to the AMPL GJH "solver" for evaluating a model at a
-    point."""
-
+@SolverFactory.register('local.gjh', doc='Local GJH solver (system PATH or cwd fallback)')
+class LocalGJHSolver(ASL):
     def __init__(self, **kwds):
         kwds['type'] = 'gjh'
         kwds['symbolic_solver_labels'] = True
-        super(GJHSolver, self).__init__(**kwds)
-        self.options.solver = 'gjh'
+        super().__init__(**kwds)
         self._metasolver = False
 
-    # A hackish way to hold on to the model so that we can parse the
-    # results.
+    def available(self, exception_flag=True):
+        """Find gjh in PATH first, fallback to cwd."""
+        # Try to find gjh in system PATH
+        path_gjh = find_executable("gjh")
+        if path_gjh:
+            self.options.solver = path_gjh
+            return super().available(exception_flag=exception_flag)
+
+        # Fallback to current working directory
+        if os.path.isfile(GJH_CWD_PATH):
+            self.options.solver = GJH_CWD_PATH
+            return super().available(exception_flag=exception_flag)
+
+        # Not found anywhere
+        if exception_flag:
+            raise RuntimeError(
+                f"GJH solver not found! Tried system PATH and current directory ({GJH_CWD_PATH})."
+            )
+        return False
+
     def _initialize_callbacks(self, model):
         self._model = model
         self._model._gjh_info = None
-        super(GJHSolver, self)._initialize_callbacks(model)
+        super()._initialize_callbacks(model)
 
     def _presolve(self, *args, **kwds):
-        super(GJHSolver, self)._presolve(*args, **kwds)
-        self._gjh_file = self._soln_file[:-3]+'gjh'
+        super()._presolve(*args, **kwds)
+        self._gjh_file = self._soln_file[:-3] + 'gjh'
         TempfileManager.add_tempfile(self._gjh_file, exists=False)
 
     def _postsolve(self):
-        #
-        # TODO: We should return the information using a better data
-        # structure (ComponentMap? so that the GJH solver does not need
-        # to be called with symbolic_solver_labels=True
-        #
+        if not os.path.exists(self._gjh_file) or \
+           not os.path.exists(self._gjh_file[:-3] + 'col') or \
+           not os.path.exists(self._gjh_file[:-3] + 'row'):
+            raise RuntimeError(
+                f"GJH failed to produce .gjh, .col, or .row files. "
+                f"Check the solver log."
+            )
         self._model._gjh_info = readgjh(self._gjh_file)
         self._model = None
-        return super(GJHSolver, self)._postsolve()
+        return super()._postsolve()
+
+
+
 
