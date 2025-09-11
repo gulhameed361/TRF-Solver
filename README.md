@@ -21,7 +21,7 @@ The solver is implemented in Python using the Pyomo modelling language. The requ
 # Running
 - A sample grey box optimisation setup is included in the RunFile.py file between lines 269 and 311.
 - Additional problems (used in the manuscript: https://doi.org/10.48550/arXiv.2509.01651) are provided in the ProblemSet.py file and can be copied into the RunFile.py file.
-- Different solver options (such as surrogate form, algorithmic variant, initial trust radius, maximum iterations, tolerances, etc.) can be set; a few are set as examples in the sample grey-box optimisation setup.
+- Different solver options (such as surrogate forms, algorithmic variants introduced in the manuscript: https://doi.org/10.48550/arXiv.2509.01651, initial trust radius, maximum iterations, tolerances, etc.) can be set; a few are set as examples in the sample grey-box optimisation setup.
 - While optimising, the solver will display progress and results on Spyder's console via logger.
 - The iteration-wise solution (text file) will also be saved in the working directory.
 
