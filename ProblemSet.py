@@ -7,7 +7,7 @@ Engineering Problems: Models 26-30
 @author: gh00616
 """
 
-#################################### Model ###############################################
+#################################### Model 1 ###############################################
 # Model 1 (Bieglers Example)
 # Define the optimization model
 model = ConcreteModel()
@@ -642,7 +642,7 @@ finally:
     sys.stdout = sys.__stdout__
 
 ################################ Model 15 ###############################################
-# Model 18 (McCormick Function)
+# Model 15 (McCormick Function)
 
 # Define the optimization model
 model = ConcreteModel()
@@ -864,7 +864,7 @@ finally:
     sys.stdout = sys.__stdout__
 
 
-############################## Model 10 ###############################################
+############################## Model 20 ###############################################
 # Model 20 (Rosenbrock_Function)
 
 # Define the optimization model
@@ -1151,6 +1151,8 @@ finally:
 
 
 
+
+#### Engineering Case Studies ####
 
 ############################## Model 26 ###############################################
 # Model 26 (Pressure Vessel Design)
@@ -1459,4 +1461,5 @@ try:
 
 finally:
     # Restore original stdout safely
+
     sys.stdout = sys.__stdout__
