@@ -26,8 +26,8 @@ The solver is implemented in Python using the Pyomo modelling language. The requ
 - The iteration-wise solution (text file) will also be saved in the working directory.
 
 # Benchmarking
-- Download the Benchmarking folder.
-- There are five ".py" files for five different black-box/derivative-free optimisation solvers. Each ".py" file contains code for 25 problems.
+- Download the Benchmarking.zip file, and extract it to a directory.
+- There will be five ".py" files for five different black-box/derivative-free optimisation solvers in the extracted folder. Each ".py" file contains code for 25 problems.
 - Create a new environment using either:
   a. Benchmarking.yml (recommended for conda), or
   b. requirements.txt (for pip users in a virtualenv).
