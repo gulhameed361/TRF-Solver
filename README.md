@@ -32,7 +32,7 @@ The solver is implemented in Python using the Pyomo modelling language. The requ
   a. Benchmarking.yml (recommended for conda), or
   b. requirements.txt (for pip users in a virtualenv).
 - Activate the environment.
-- Open Spyder IDE, then open one of the ".py" files. For example, open Benchmarking-COBYLA.py and uncomment the formulation/code of problem 1. Run the code. Repeat the process for all 25 problems to reproduce benchmarking results for each DFO solver.
+- Open Spyder IDE, then open one of the ".py" files. For example, open Benchmarking-COBYLA.py and uncomment the formulation/code of problem 1 (i.e., P1). Run the code. Repeat the process for all 25 problems to reproduce benchmarking results for each DFO solver.
 
 Have feedback or questions? Please email: gulhameed361@gmail.com.
 Thanks for using the TRF Solver — enjoy optimising!
