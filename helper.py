@@ -16,8 +16,6 @@ def packXYZ(x, y, z):
     t = np.concatenate([x, y, z])
     return t
 
-
-
 def minIgnoreNone(a,b):
     if a is None:
         return b
