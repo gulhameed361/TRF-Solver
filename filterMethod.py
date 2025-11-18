@@ -1,4 +1,3 @@
-
 class FilterElement:
 
     def __init__(self, objective, infeasible):
