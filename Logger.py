@@ -37,7 +37,7 @@ class IterLog:
         self.trustRadius = None
         self.sampleRadius = None
         self.stepNorm = None
-        self.fStep, self.thetaStep, self.rejected, self.restoration, self.criticality = [False]*5
+        self.fStep, self.thetaStep, self.relaxthetaStep, self.rejected, self.restoration, self.criticality = [False]*6
 
 
     def setRelatedValue(self,thetak=None,objk=None,chik=None,EV=None,FEs=None,IT=None,trustRadius=None,sampleRadius=None,stepNorm=None):
@@ -82,6 +82,8 @@ class IterLog:
             print("f-type step")
         if self.thetaStep:
             print("theta-type step")
+        if self.relaxthetaStep:
+            print("relax-theta-type step")
         if self.rejected:
             print("step rejected")
         if self.restoration:
