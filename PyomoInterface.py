@@ -40,6 +40,10 @@ from EigenvalueCalculator import compute_eigenvalues_from_sparse
 
 logger = logging.getLogger('TRF Algorithm')
 
+class GlobalizationStratgy:
+    Filter = 0
+    Funnel = 1
+
 class ROMType:
     linear = 0
     quadratic = 1
@@ -882,9 +886,23 @@ class PyomoInterface(object):
         opt = SolverFactory(self.config.solver)
         opt.options.update(self.config.solver_options)
         ##
-        opt.options['halt_on_ampl_error'] = 'yes'
-        # opt.options['solver_options']['linear_solver'] = 'mumps'  # Other options: 'ma27', 'ma57', 'pardiso'
-        opt.options['max_iter'] = 20000
+        # opt.options['halt_on_ampl_error'] = 'yes'
+        # # opt.options['solver_options']['linear_solver'] = 'mumps'  # Other options: 'ma27', 'ma57', 'pardiso'
+        # opt.options['max_iter'] = 20000
+        
+        opt.options = {
+            # 'nlp_scaling_method': 'gradient-based',
+            'max_iter': 20000,
+            'halt_on_ampl_error': 'yes',
+            # 'print_level': 7,
+            # 'tol': 1e-7, #1e-6
+            # 'constr_viol_tol': 1e-7, #1e-6
+            # 'dual_inf_tol': 1e-4, #1e-6
+            # 'acceptable_constr_viol_tol': 1e-4,
+            # 'acceptable_tol': 1e-4, #1e-3
+            # 'mu_strategy' : 'adaptive'
+        }
+        
         ##
         results = opt.solve(
             model, keepfiles=self.keepfiles, tee=self.stream_solver)
@@ -964,7 +982,7 @@ class PyomoInterface(object):
         self.deactiveExtraConObj()
         self.activateRomCons(x, rom_params)
         
-        optGJH = SolverFactory('contrib.gjh')
+        optGJH = SolverFactory('local.gjh')
         optGJH.solve(model, tee=False, symbolic_solver_labels=True)
         
         g, J, H, varlist, conlist = model._gjh_info 
