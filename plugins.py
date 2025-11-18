@@ -1,3 +1,5 @@
+# This code will be used later to plug the solver into pyomo
+
 #  ___________________________________________________________________________
 #
 #  Pyomo: Python Optimization Modeling Objects
