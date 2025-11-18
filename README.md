@@ -18,21 +18,8 @@ The solver is implemented in Python using the Pyomo modelling language. The requ
 - Open Spyder IDE, then open the RunFile.py file.
 - Scroll to the indicated section (at the end: line 269 and onwards) and add your grey box optimisation code.
 
-# Running
-- A sample grey box optimisation setup is included in the RunFile.py file between lines 269 and 311.
-- Additional problems (used in the manuscript: https://doi.org/10.48550/arXiv.2509.01651) are provided in the ProblemSet.py file and can be copied into the RunFile.py file.
-- Different solver options (such as surrogate forms, algorithmic variants introduced in the manuscript: https://doi.org/10.48550/arXiv.2509.01651, initial trust radius, maximum iterations, tolerances, etc.) can be set; a few are set as examples in the sample grey-box optimisation setup.
-- While optimising, the solver will display progress and results on Spyder's console via logger.
-- The iteration-wise solution (text file) will also be saved in the working directory.
-
-# Benchmarking
-- Download the Benchmarking.zip file, and extract it to a directory.
-- There will be five ".py" files for five different black-box/derivative-free optimisation solvers in the extracted folder. Each ".py" file contains code for 25 problems.
-- Create a new environment using either:
-  a. Benchmarking.yml (recommended for conda), or
-  b. requirements.txt (for pip users in a virtualenv).
-- Activate the environment.
-- Open Spyder IDE, then open one of the ".py" files. For example, open Benchmarking-COBYLA.py and uncomment the formulation/code of problem 1 (i.e., P1). Run the code. Repeat the process for all 25 problems to reproduce benchmarking results for each DFO solver.
+# Instructions for Generating Results
+The instructions are given under each release. Refer to the release notes of TRF-Solver v1.0.0 to reproduce results for the manuscript: https://doi.org/10.48550/arXiv.2509.01651. 
 
 Have feedback or questions? Please email: gulhameed361@gmail.com.
 Thanks for using the TRF Solver — enjoy optimising!
