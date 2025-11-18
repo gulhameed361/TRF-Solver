@@ -16,6 +16,7 @@ from pyomo.common.dependencies import numpy as np
 
 from filterMethod import (
     FilterElement, Filter)
+from funnelMethod import Funnel
 from helper import (cloneXYZ, packXYZ)
 from Logger import Logger
 from PyomoInterface import (
@@ -62,6 +63,16 @@ def TRF(m, eflist, config):
     objk = problem.evaluateObj(x, y, z)
     
     stepNorm = 1e10
+    
+    funnel = Funnel(phi_init=thetak,
+                f_best_init=objk,
+                phi_min=config.phi_min,
+                kappa_f=config.kappa_f,
+                kappa_r=config.kappa_r,
+                alpha=config.alpha,
+                beta=config.beta,
+                mu_s=config.mu_s,
+                eta=config.eta)
     
     while True:
         if iteration >= 0:
@@ -240,10 +251,13 @@ def TRF(m, eflist, config):
 
             logger.iterlog.restoration = True
 
-            fe = FilterElement(
-                objk - config.gamma_f*thetak,
-                (1 - config.gamma_theta)*thetak)
-            filteR.addToFilter(fe)
+            if config.globalization_strategy == 0: 
+                fe = FilterElement(
+                     objk - config.gamma_f*thetak,
+                     (1 - config.gamma_theta)*thetak)
+                filteR.addToFilter(fe)
+            elif config.globalization_strategy == 1:
+                pass
 
             rhok = 1 - ((theta - config.ep_i)/max(thetak, config.ep_i))
             if rhok < config.eta1:
@@ -289,61 +303,119 @@ def TRF(m, eflist, config):
             stepNorm = np.linalg.norm(packXYZ(x-xk, y-yk, z-zk), np.inf)
             logger.setCurIter(stepNorm=stepNorm)
 
+            # theta = Trial theta, thetak = current theta
             theta = np.linalg.norm(yr - y, 1)
-            fe = FilterElement(obj, theta)
+            
+            # Calculate rho for theta step trust region update
+            rhok = 1 - ((theta - config.ep_i) /
+                    max(thetak, config.ep_i))
+            
+            # Filter method
+            if config.globalization_strategy == 0:
+            
+                fe = FilterElement(obj, theta)
 
-            if not filteR.checkAcceptable(fe, config.theta_max) and iteration > 0:
-                logger.iterlog.rejected = True
-                config.trust_radius = max(config.gamma_c*stepNorm,
-                                  config.delta_min)
-                # config.trust_radius = max(config.gamma_c*config.trust_radius,
-                #                   config.delta_min)
-                rebuildROM = False
-                ROMAccuracy = False
-                
-                x, y, z = cloneXYZ(xk, yk, zk)
-                continue
-
-            # Switching Condition and Trust Region update
-            if (((objk - obj) >= config.kappa_theta*
-                 pow(thetak, config.gamma_s))
-                and
-                (thetak < config.theta_min)):
-                logger.iterlog.fStep = True
-
-                config.trust_radius = min(
-                    max(config.gamma_e*stepNorm, config.trust_radius),
-                    config.radius_max)
-                # config.trust_radius = min(config.gamma_e*config.trust_radius,
-                #     config.radius_max)
-                ROMAccuracy = True
-
-            else:
-                logger.iterlog.thetaStep = True
-
-                fe = FilterElement(
-                    obj - config.gamma_f*theta,
-                    (1 - config.gamma_theta)*theta)
-                filteR.addToFilter(fe)
-
-                # Calculate rho for theta step trust region update
-                rhok = 1 - ((theta - config.ep_i) /
-                            max(thetak, config.ep_i))
-                if rhok < config.eta1:
+                if not filteR.checkAcceptable(fe, config.theta_max) and iteration > 0:
+                    logger.iterlog.rejected = True
                     config.trust_radius = max(config.gamma_c*stepNorm,
-                                      config.delta_min)
+                                  config.delta_min)
                     # config.trust_radius = max(config.gamma_c*config.trust_radius,
                     #                   config.delta_min)
+                    rebuildROM = False
                     ROMAccuracy = False
-                elif rhok >= config.eta2:
+                
+                    x, y, z = cloneXYZ(xk, yk, zk)
+                    continue
+
+                # Switching Condition and Trust Region update
+                if (((objk - obj) >= config.kappa_theta*
+                     pow(thetak, config.gamma_s))
+                     and
+                     (thetak < config.theta_min)):
+                    logger.iterlog.fStep = True
+
                     config.trust_radius = min(
-                        max(config.gamma_e*stepNorm, config.trust_radius),
-                        config.radius_max)
+                         max(config.gamma_e*stepNorm, config.trust_radius),
+                         config.radius_max)
                     # config.trust_radius = min(config.gamma_e*config.trust_radius,
                     #     config.radius_max)
                     ROMAccuracy = True
-                elif rhok >= config.eta1 and rhok < config.eta2:
+
+                else:
+                    logger.iterlog.thetaStep = True
+
+                    fe = FilterElement(
+                       obj - config.gamma_f*theta,
+                       (1 - config.gamma_theta)*theta)
+                    
+                    filteR.addToFilter(fe)
+
+                    #trust region update
+                    if rhok < config.eta1:
+                        config.trust_radius = max(config.gamma_c*stepNorm,
+                                      config.delta_min)
+                        # config.trust_radius = max(config.gamma_c*config.trust_radius,
+                        #                   config.delta_min)
+                        ROMAccuracy = False
+                    elif rhok >= config.eta2:
+                        config.trust_radius = min(
+                            max(config.gamma_e*stepNorm, config.trust_radius),
+                            config.radius_max)
+                        # config.trust_radius = min(config.gamma_e*config.trust_radius,
+                        #     config.radius_max)
+                        ROMAccuracy = True
+                    elif rhok >= config.eta1 and rhok < config.eta2:
+                        ROMAccuracy = False
+                    
+            # Funnel method
+            elif config.globalization_strategy == 1:
+                status = funnel.classify_step(thetak, theta, objk, obj, config.trust_radius)
+
+                if status == 'f':
+                    funnel.accept_f(theta, obj)
+                    logger.iterlog.fStep = True
+                    config.trust_radius = min(
+                         max(config.gamma_e*stepNorm, config.trust_radius),
+                         config.radius_max)
+                    # config.trust_radius = min(config.gamma_e*config.trust_radius,
+                    #     config.radius_max)
+                    ROMAccuracy = True
+                elif status in ('theta', 'theta-relax'):
+                    if status == 'theta':
+                        funnel.accept_theta(theta)
+                        logger.iterlog.thetaStep = True
+                    else:
+                        funnel.relax_theta(theta)
+                        logger.iterlog.relaxthetaStep = True
+                    
+                    #trust region update
+                    if rhok < config.eta1:
+                        config.trust_radius = max(config.gamma_c*stepNorm,
+                                      config.delta_min)
+                        # config.trust_radius = max(config.gamma_c*config.trust_radius,
+                        #                   config.delta_min)
+                        ROMAccuracy = False
+                    elif rhok >= config.eta2:
+                        config.trust_radius = min(
+                            max(config.gamma_e*stepNorm, config.trust_radius),
+                            config.radius_max)
+                        # config.trust_radius = min(config.gamma_e*config.trust_radius,
+                        #     config.radius_max)
+                        ROMAccuracy = True
+                    elif rhok >= config.eta1 and rhok < config.eta2:
+                        ROMAccuracy = False
+                else:      # 'reject'
+                    logger.iterlog.rejected = True
+                    config.trust_radius = max(config.gamma_c*stepNorm,
+                                  config.delta_min)
+                    # config.trust_radius = max(config.gamma_c*config.trust_radius,
+                    #                   config.delta_min)
+                    rebuildROM = False
                     ROMAccuracy = False
+                
+                    x, y, z = cloneXYZ(xk, yk, zk)
+                    continue
+
             
 
             # # Switching Condition and Trust Region update
@@ -411,3 +483,4 @@ def TRF(m, eflist, config):
 
     logger.printVectors()
 #    problem.reverseTransform()
+
