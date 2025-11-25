@@ -21,7 +21,7 @@ The solver is implemented in Python using the Pyomo modelling language. The requ
 # Instructions for Generating Results
 The instructions are given under each release. 
 - Refer to the release notes of TRF-Solver v0.0.0 to reproduce results for the manuscript: https://doi.org/10.48550/arXiv.2509.01651.
-- Refer to the release notes of TRF-Solver v0.0.1 to reproduce results for the manuscript: -----.
+- Refer to the release notes of TRF-Solver v0.0.1 to reproduce results for the manuscript: https://doi.org/10.48550/arXiv.2511.18998.
 
 Have feedback or questions? Please email: gulhameed361@gmail.com.
 Thanks for using the TRF Solver — enjoy optimising!
